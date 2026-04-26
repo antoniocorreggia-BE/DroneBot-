@@ -1,0 +1,39 @@
+from ArucoTracker import ArucoTracker
+
+
+def main():
+    # Initialize USB camera
+    cap = cv2.VideoCapture(1)    
+    
+    #Initialize ArucoTracker object
+    aruco_tracker = ArucoTracker([23, 42])
+    try:
+        while True:
+            # Read frame from camera
+            _, frame = cap.read()
+
+            # Find aruco markers in the frame
+            markerID, errors, angle, frame_aruco = aruco_tracker.find_markers(frame)
+            if markerID is not None:
+                frame = frame_aruco
+                
+                print(f'Found aruco {markerID}')            
+                print(f'Errors: {errors}')
+
+            # Show frame
+            cv2.imshow('Aruco Marker Detection', frame)
+            
+            # Exit on 'q'
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    except KeyboardInterrupt:
+        print('\nCtrl+C pressed')
+
+    finally:
+        # Release camera and close windows
+        print('Closing...')
+        cap.release()
+        cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
