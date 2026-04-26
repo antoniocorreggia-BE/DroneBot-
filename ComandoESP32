@@ -1,0 +1,33 @@
+void setup() {
+  // put your setup code here, to run once:
+
+}
+const int pinAvanti = 12;  
+const int pinIndietro = 13; 
+const int pinDestra = 14;  
+const int pinSinistra = 27; 
+
+void loop() {
+  
+  if (Serial.available()) {
+    char comando = Serial.read();
+    
+    // Reset dei pin
+    digitalWrite(pinAvanti, LOW);
+    digitalWrite(pinSinistra, LOW);
+    digitalWrite(pinDestra, LOW);
+
+    if (comando == 'A') {
+      digitalWrite(pinAvanti, HIGH);
+    } 
+    else if (comando == 'S') {
+      digitalWrite(pinSinistra, HIGH);
+      digitalWrite(pinAvanti, HIGH); // Sterza mentre avanza
+    } 
+    else if (comando == 'D') {
+      digitalWrite(pinDestra, HIGH);
+      digitalWrite(pinAvanti, HIGH); // Sterza mentre avanza
+    }
+    
+  }
+}
