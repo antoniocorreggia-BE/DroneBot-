@@ -1,0 +1,57 @@
+1. FASE DI INIZIALIZZAZIONE
+
+Inizializza la Comunicazione con l'ESP32.
+
+Carica il modello YOLO per il rilevamento del fuoco.
+
+Inizializza l'oggetto ArUco Tracker con i parametri del marker.
+
+Avvia lo Streaming Video dal dispositivo (Drone/Cellulare).
+
+2. LOOP DI ELABORAZIONE 
+
+MENTRE il sistema è attivo:
+
+RAMO A: Rilevamento Obiettivo (Fuoco)
+
+Esegui l'inferenza YOLO sul frame.
+
+SE nei limiti di Confidenza 
+
+Disegna il box intorno al fuoco.
+
+RAMO B: Tracking e Navigazione (ArUco)
+
+Cerca il marker ArUco specifico del Rover nel frame.
+
+SE Marker Rilevato:
+
+Calcola l'errore di posizione X (distanza dal centro).
+
+Calcola l'Angolo di orientamento del Rover.
+
+ESEGUI LOGICA DI CONTROLLO:
+
+SE X è fuori soglia: Comando DESTRA o SINISTRA.
+
+ALTRIMENTI SE Angolo è fuori soglia: Comando di ROTAZIONE.
+
+ALTRIMENTI: Comando AVANTI.
+
+ALTRIMENTI (Marker perso):
+
+Invia comando STOP all'ESP32 per sicurezza.
+
+3. FASE DI ATTUAZIONE (ESP32)
+
+Ricevi il comando via Seriale (A, S, D, H).
+
+Traducilo in segnali elettrici (HIGH/LOW) sui pin GPIO.
+
+Chiama i contatti del telecomando originale del Rover.
+
+5. CHIUSURA
+
+Ferma i motori del Rover.
+
+Rilascia la fotocamera e chiudi la porta seriale.
