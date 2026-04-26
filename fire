@@ -1,0 +1,35 @@
+import cv2
+import os
+from ultralytics import YOLO
+
+def main():
+    path_modello = os.path.join(os.path.dirname(__file__), "Fire_def.pt")
+    
+    try:
+        model = YOLO('Fire_def.pt')
+        print("Modello caricato.")
+    except Exception as e:
+        print(f"Errore caricamento: {e}")
+        return
+
+    cap = cv2.VideoCapture(1)
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            continue
+
+        results = model(frame, conf=0.4, verbose=False)
+        
+        frame_visual = results[0].plot()
+
+        cv2.imshow("Rilevamento Fuoco", frame_visual)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
