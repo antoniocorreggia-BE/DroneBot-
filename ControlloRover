@@ -1,0 +1,29 @@
+import serial
+import time
+
+def setup_esp32(port='COM3'):
+    try:
+        ser = serial.Serial(port, 115200, timeout=0.1)
+        time.sleep(2)
+        return ser
+    except:
+        print("ESP32 non connesso!")
+        return None
+
+def invia_comando(ser, x_err, gradi):
+    if ser is None: return
+    
+    comando = "H" 
+    
+    if x_err < -0.25:
+        comando = "S"
+    elif x_err > 0.25:
+        comando = "D"
+    elif gradi > 15:
+        comando = "S"
+    elif gradi < -15:
+        comando = "D"
+    else:
+        comando = "A"
+        
+    ser.write(comando.encode())
