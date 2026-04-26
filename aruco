@@ -1,12 +1,15 @@
+import cv2
+from ControlloRover import setup_esp32, invia_comando
 from ArucoTracker import ArucoTracker
 
 
 def main():
     # Initialize USB camera
     cap = cv2.VideoCapture(1)    
-    
+
     #Initialize ArucoTracker object
     aruco_tracker = ArucoTracker([23, 42])
+    esp32 = setup_esp32('COM3')
     try:
         while True:
             # Read frame from camera
@@ -16,6 +19,9 @@ def main():
             markerID, errors, angle, frame_aruco = aruco_tracker.find_markers(frame)
             if markerID is not None:
                 frame = frame_aruco
+                invia_comando(esp32, errors[0], angle * 180 / 3.14)
+            else:
+                if esp32: esp32.write(b"H")
                 
                 print(f'Found aruco {markerID}')            
                 print(f'Errors: {errors}')
